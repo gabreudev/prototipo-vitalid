@@ -38,9 +38,15 @@
       height: 100%;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
       font-family: 'Inter', sans-serif;
+      overscroll-behavior-y: none;
+    }
+    #screenBody {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
     }
     .heading-font {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -352,14 +358,9 @@
               Todas as tags desta lista apontam para o seu cadastro.
             </p>
             <p class="text-xs text-slate-600 leading-relaxed">
-              No momento do socorro, o profissional do SAMU apenas aproxima o aparelho de <strong>qualquer uma das suas tags</strong> (ex: sua pulseira rosa) e o sistema localiza imediatamente o seu prontuário.
+              No momento do socorro, o profissional de emergência apenas aproxima o aparelho de <strong>qualquer uma das suas tags</strong> (ex: sua pulseira) e o sistema localiza imediatamente o seu prontuário crítico.
             </p>
           </div>
-
-          <!-- BOTÃO TESTAR RESGATE -->
-          <button onclick="loginAs('socorrista', 'tela-socorrista')" class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl border border-slate-300 flex items-center justify-center gap-1.5 transition">
-            <span>Ir para Visão do Socorrista SAMU →</span>
-          </button>
 
         </div>
 
@@ -561,7 +562,7 @@
       </div>
 
       <!-- BARRA DE NAVEGAÇÃO INFERIOR DO CELULAR (DINÂMICA POR PERFIL) -->
-      <nav id="mobileBottomNav" class="w-full bg-white border-t border-slate-200 py-2 md:py-1.5 px-3 flex items-center justify-around z-30 shrink-0 hidden" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom));">
+      <nav id="mobileBottomNav" class="w-full bg-white border-t border-slate-200 py-2 md:py-1.5 px-3 flex items-center justify-around z-40 shrink-0 hidden" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom));">
         <!-- Renderizado dinamicamente via JS conforme o perfil (Paciente vs Socorrista) -->
       </nav>
 
@@ -656,7 +657,7 @@
   </div>
 
   <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-20 md:bottom-6 left-4 md:left-auto right-4 md:right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-white border border-slate-200 text-slate-800 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 max-w-sm mx-auto md:mx-0">
+  <div id="toast" class="fixed bottom-20 md:bottom-6 left-4 md:left-auto right-4 md:right-6 z-50 pointer-events-none select-none transform translate-y-20 opacity-0 transition-all duration-300 bg-white border border-slate-200 text-slate-800 text-xs px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 max-w-sm mx-auto md:mx-0">
     <span id="toastIcon" class="text-emerald-600 font-bold">✓</span>
     <span id="toastMessage" class="font-medium">Mensagem</span>
   </div>
@@ -857,46 +858,46 @@
         const isDados = app.currentScreen === 'tela-dados';
         const isTags = app.currentScreen === 'tela-tags';
         nav.innerHTML = `
-          <button onclick="goToScreen('tela-dados')" class="nav-item flex flex-col items-center gap-0.5 ${isDados ? 'text-brand-blue font-bold' : 'text-slate-400 hover:text-brand-blue font-medium'} text-[10px] transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button type="button" onclick="goToScreen('tela-dados')" class="nav-item flex-1 py-1.5 px-2 flex flex-col items-center gap-1 ${isDados ? 'text-brand-blue font-bold' : 'text-slate-400 hover:text-brand-blue font-medium'} text-[10px] transition cursor-pointer active:scale-95">
+            <svg class="w-5 h-5 ${isDados ? 'text-brand-blue' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span>Meus Dados</span>
+            <span class="leading-none">Meus Dados</span>
           </button>
-          <button onclick="goToScreen('tela-tags')" class="nav-item flex flex-col items-center gap-0.5 ${isTags ? 'text-brand-blue font-bold' : 'text-slate-400 hover:text-brand-blue font-medium'} text-[10px] transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button type="button" onclick="goToScreen('tela-tags')" class="nav-item flex-1 py-1.5 px-2 flex flex-col items-center gap-1 ${isTags ? 'text-brand-blue font-bold' : 'text-slate-400 hover:text-brand-blue font-medium'} text-[10px] transition cursor-pointer active:scale-95">
+            <svg class="w-5 h-5 ${isTags ? 'text-brand-blue' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
             </svg>
-            <span>Minhas Tags</span>
+            <span class="leading-none">Minhas Tags</span>
           </button>
-          <button onclick="logoutToSelection()" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 font-medium text-[10px] transition">
+          <button type="button" onclick="logoutToSelection()" class="nav-item flex-1 py-1.5 px-2 flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 font-medium text-[10px] transition cursor-pointer active:scale-95">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
-            <span>Trocar Perfil</span>
+            <span class="leading-none">Trocar Perfil</span>
           </button>
         `;
       } else if (app.currentRole === 'socorrista') {
         const isLeitor = app.currentScreen === 'tela-socorrista';
         const isProntuario = app.currentScreen === 'tela-prontuario';
         nav.innerHTML = `
-          <button onclick="goToScreen('tela-socorrista')" class="nav-item flex flex-col items-center gap-0.5 ${isLeitor ? 'text-red-600 font-bold' : 'text-slate-400 hover:text-red-600 font-medium'} text-[10px] transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button type="button" onclick="goToScreen('tela-socorrista')" class="nav-item flex-1 py-1.5 px-2 flex flex-col items-center gap-1 ${isLeitor ? 'text-red-600 font-bold' : 'text-slate-400 hover:text-red-600 font-medium'} text-[10px] transition cursor-pointer active:scale-95">
+            <svg class="w-5 h-5 ${isLeitor ? 'text-red-600' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 004 11m0 0a8 8 0 00.187 1.745" />
             </svg>
-            <span>Leitor NFC</span>
+            <span class="leading-none">Leitor NFC</span>
           </button>
-          <button onclick="goToScreen('tela-prontuario')" class="nav-item flex flex-col items-center gap-0.5 ${isProntuario ? 'text-red-600 font-bold' : 'text-slate-400 hover:text-red-600 font-medium'} text-[10px] transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button type="button" onclick="goToScreen('tela-prontuario')" class="nav-item flex-1 py-1.5 px-2 flex flex-col items-center gap-1 ${isProntuario ? 'text-red-600 font-bold' : 'text-slate-400 hover:text-red-600 font-medium'} text-[10px] transition cursor-pointer active:scale-95">
+            <svg class="w-5 h-5 ${isProntuario ? 'text-red-600' : 'text-slate-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span>Prontuário</span>
+            <span class="leading-none">Prontuário</span>
           </button>
-          <button onclick="logoutToSelection()" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 font-medium text-[10px] transition">
+          <button type="button" onclick="logoutToSelection()" class="nav-item flex-1 py-1.5 px-2 flex flex-col items-center gap-1 text-slate-400 hover:text-slate-700 font-medium text-[10px] transition cursor-pointer active:scale-95">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
-            <span>Trocar Perfil</span>
+            <span class="leading-none">Trocar Perfil</span>
           </button>
         `;
       }
